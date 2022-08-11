@@ -9,11 +9,16 @@ import java.util.Scanner;
 
 public class RockPaperScissors {
     public static void main(String[] args) {
-        // get the number of rounds from user
-        int rounds = getRoundsFromUser();
+        boolean decision;
+        do{
+            // get the number of rounds from user
+            int rounds = getRoundsFromUser();
 
-        //The game begins
-        rockPaperScissorsStart(rounds);
+            //The game begins
+            rockPaperScissorsStart(rounds);
+
+            decision = askToPlayAgain();
+        } while(decision);
     }
 
     //Start the process of RPS!
@@ -75,29 +80,37 @@ public class RockPaperScissors {
         }
     }
 
+    public static boolean askToPlayAgain(){
+        String decision = getUserStringInput("Would you like to play again? (yes/no)");
+        boolean valid = false;
+        boolean finalDecision = false;
+        do{
+            if(decision.equalsIgnoreCase("no")){
+                valid = true;
+            } else if (decision.equalsIgnoreCase("yes")){
+                finalDecision = true;
+                valid = true;
+            } else {
+                decision =  getUserStringInput("Invalid answer. Would you like to play again?");
+            }
+        } while(!valid);
+        return  finalDecision;
+    }
+
     public static int getRoundsFromUser(){
         final int MAX_ROUNDS = 10;
         final int MIN_ROUNDS = 1;
         int userRounds = getUserIntInput("How many rounds of Rock, Paper, and Scissors do you want to have?");
-        userRounds = roundChecking(MAX_ROUNDS, MIN_ROUNDS, userRounds);
+        roundChecking(MAX_ROUNDS, MIN_ROUNDS, userRounds);
         return userRounds;
     }
 
     // Checks if the NUMBER OF ROUNDS chosen by the user fits the range!
-    public static int roundChecking(int max, int min, int userRounds){
-        boolean valid = false;
-        do{
-            if(userRounds > max){
-                print("Invalid Input. Maximum number of rounds is 10. Please try again");
-                userRounds = getUserIntInput("How many rounds of Rock, Paper, and Scissors do you want to have?");
-            } else if (userRounds < min) {
-                print("Invalid Input. Minimum number of rounds is 1. Please try again");
-                userRounds = getUserIntInput("How many rounds of Rock, Paper, and Scissors do you want to have?");
-            }else{
-                valid = true;
+    public static void  roundChecking(int max, int min, int userRounds){
+            if((userRounds > max) || (userRounds < min)){
+                print("Invalid Input. System closing");
+                System.exit(0);
             }
-        }while(!valid);
-        return userRounds;
     }
 
     public static int getUserIntInput(String message){
@@ -128,6 +141,21 @@ public class RockPaperScissors {
                 userChoice = new Scanner(System.in).nextLine();
             } else if (!(userChoice.equals("1") || userChoice.equals("2") || userChoice.equals("3"))){
                 print("Invalid choice. Please choose between 1 to 3. (1 - Rock, 2 - Paper, 3- Scissors)");
+                userChoice = new Scanner(System.in).nextLine();
+            } else{
+                valid = true;
+            }
+        }while(!valid);
+        return userChoice;
+    }
+
+    public static String getUserStringInput(String message){
+        print(message);
+        String userChoice = new Scanner(System.in).nextLine();
+        boolean valid = false;
+        do{
+            if(userChoice.isEmpty()){
+                print("A choice must be made. Please try again");
                 userChoice = new Scanner(System.in).nextLine();
             } else{
                 valid = true;
